@@ -171,7 +171,7 @@ type Token struct {
 	Value string
 }
 
-func lexer(query string) []Token {
+func lexer(query string) Tokens {
 	tokens := make([]Token, 0)
 
 	acc := ""
@@ -206,7 +206,11 @@ func lexer(query string) []Token {
 	}
 
 	fmt.Println(tokens)
-	return tokens
+	t := Tokens{
+		tokens: tokens,
+		pos:    0,
+	}
+	return t
 }
 
 //func parseBracket(key string, tokens []Token) Match {
@@ -226,11 +230,18 @@ func lexer(query string) []Token {
 //}
 //}
 
-func tokMatch(tokens []Token, t Type) ([]Token, bool) {
-	if len(tokens) > 0 && tokens[0].Type == t {
-		return tokens[1:], true
+type Tokens struct {
+	tokens []Token
+	pos    int
+}
+
+func (t *Tokens) match(typ Type) bool {
+	n := t.pos + 1
+	if n < len(t.tokens) && t.tokens[n].Type == typ {
+		t.pos = n
+		return true
 	} else {
-		return tokens, false
+		return false
 	}
 }
 
@@ -241,17 +252,20 @@ func parse(tokens []Token) Match {
 		case IDENT:
 			if i == len(tokens)-1 {
 				return &Single{Name: token.Value}
-			} else if tokens[i+1].Type == DOT {
+			} else if tokens, m := tokMatch(tokens, DOT); m {
 				return &Obj{
 					Name: token.Value,
-					In:   parse(tokens[i+2:]),
+					In:   parse(tokens[1:]),
 				}
-			} else if tokens[i+1].Type == LBRACK {
-				if tokens[i+2].Type == IDENT && tokens[i+3].Type == RBRACK {
-					return &Multiple{
-						Key:   token.Value,
-						Value: fmt.Sprintf(`"%s"`, tokens[i+2].Value),
-						In:    parse(tokens[i+4:]),
+			} else if tokens, m := tokMatch(tokens, LBRACK); m {
+				if tokens, m := tokMatch(tokens, IDENT); m {
+					v := tokens[0].Value
+					if tokens, m := tokMatch(tokens, RBRACK); m {
+						return &Multiple{
+							Key:   token.Value,
+							Value: fmt.Sprintf(`"%s"`, v),
+							In:    parse(tokens[1:]),
+						}
 					}
 				} else {
 					fmt.Println("parse error expecting [IDENT]", tokens)
@@ -274,6 +288,18 @@ func parse(tokens []Token) Match {
 		}
 	}
 	return nil
+}
+
+// expr = term
+// expr = (term.)+ expr
+// expr = (term[term].)+ expr
+
+func parse2(tokens Tokens) Match {
+
+}
+
+func parseSingle(tokens []Token) ([]Token, Match) {
+	tok
 }
 
 func main() {
