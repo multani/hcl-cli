@@ -56,8 +56,10 @@ func FormatCommandFactory() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "fmt [HCL_FILE]",
 		Short: "Format HCL",
-		Long:  `long help`,
-		Run:   formatCommand,
+		Long: `Correctly format, using a canonical representation, HCL data.
+
+If no file is specified, it will read HCL content from the standard input.`,
+		Run: formatCommand,
 	}
 
 	return cmd

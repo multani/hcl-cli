@@ -13,8 +13,10 @@ func main() {
 	rootCmd := &cobra.Command{
 		Use:   "hcl",
 		Short: "HCL command-line tool",
-		Long:  `blabla`,
+		Long:  `A HCL command-line tool`,
 		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Usage()
+			os.Exit(1)
 		},
 	}
 

@@ -173,8 +173,49 @@ func SetCommandFactory() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set QUERY_PATH VALUE [HCL_FILE]",
 		Short: "Set the value of a HCL attribute",
-		Long:  `long help`,
-		Run:   setCommand,
+		Long: `Edit the content of a HCL attribute.
+
+This allows to access specific attribute in a HCL file and set it to a new
+value.  Only simple values are supported (you can't set the content of an
+attribute with a structure for example).
+
+Syntax for accessing an attribute:
+----------------------------------
+
+  * IDENT
+    access a single field
+  * (IDENT ".")+ IDENT
+    access sub item of a simple structure
+  * (IDENT "[" IDENT "]" .) IDENT
+    access items from a named structure
+
+
+Example:
+--------
+
+  Considering the following HCL data:
+
+    foo = true
+    obj {
+      val = 56
+    }
+    some "map" {
+      item = 42
+      obj {
+        val = "abc"
+      }
+    }
+
+  - "foo"
+        query the value: true
+  - "obj.val"
+        query the value: 56
+  - "some[map].item"
+        query the value: 42
+  - "some[map].obj.val"
+        query the value: "abc"
+`,
+		Run: setCommand,
 	}
 
 	cmd.PersistentFlags().StringVarP(
