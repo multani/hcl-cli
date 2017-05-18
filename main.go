@@ -20,11 +20,8 @@ func main() {
 		},
 	}
 
-	setCmd := commands.SetCommandFactory()
-	rootCmd.AddCommand(setCmd)
-
-	formatCmd := commands.FormatCommandFactory()
-	rootCmd.AddCommand(formatCmd)
+	rootCmd.AddCommand(commands.FormatCommandFactory())
+	rootCmd.AddCommand(commands.SetCommandFactory())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

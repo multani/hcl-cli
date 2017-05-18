@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -13,6 +12,7 @@ import (
 	"github.com/hashicorp/hcl/hcl/token"
 	"github.com/spf13/cobra"
 
+	"github.com/multani/hcl-cli/hcl/misc"
 	"github.com/multani/hcl-cli/hcl/query"
 )
 
@@ -103,34 +103,11 @@ func setCommand(cmd *cobra.Command, args []string) {
 	queryPath := args[0]
 	value := args[1]
 
-	fp, closeFunc := func() (*os.File, func() error) {
-		if len(args) == 3 {
-			fp, err := os.Open(args[2])
-			if err != nil {
-				fmt.Printf("error: %v", err)
-				os.Exit(1)
-			}
-			return fp, fp.Close
-		} else {
-			return os.Stdin, func() error { return nil }
-		}
-	}()
-
-	data := make([]byte, 0)
-
-	for {
-		buf := make([]byte, 100)
-		count, err := fp.Read(buf)
-
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			fmt.Printf("error while reading: %v", err)
-			os.Exit(1)
-		}
-		data = append(data, buf[:count]...)
+	data, err := misc.FileOrStdinContent(args, 2)
+	if err != nil {
+		fmt.Printf("error while reading data: %v\n", err)
+		os.Exit(255)
 	}
-	defer closeFunc()
 
 	p, err := parser.Parse(data)
 	if err != nil {
