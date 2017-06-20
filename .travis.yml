@@ -1,0 +1,14 @@
+# vim:ft=yaml tabstop=2 shiftwidth=2 softtabstop=2
+
+language: go
+go:
+  - 1.x
+
+deploy:
+  provider: releases
+  api_key:
+    secure: 1G8v0+FzKzrxXaZEJ5dkSHXzfL9JeBB9nEHvTzEWqUvqPbAyOGX3Vw0stIxcnzF1kRC4yGwgPqJZ8NzB5vbWTy8845P9U4c9/zl1BLkWZdI/Az5Zx+bA1MRf/EsDNQN91wyn6cypMftEqpzcdngHhaYcA2UQX732nI0xIvuCPzUECZ16CRx8aCFMIQ4SEm4LhAfewNVjMI0vOR06InpGWVhZQh0XebS7SvtfjvGDC/CBpZncxklyiTcaNzQvWc4RTQHsDvG2OdcgY0G7ohu2gccLgQseZPLu+gbJX4mjHbvRyy6xci40WPVM3KRkpeWrls6SzmHwoat9NMZHL7ynHmb9nS32xPc3FKgZr98UcMb/LGJv6mdRK+GNRJ8tQQEJvyq89iowotc6IIyYKPuOF/L/hKGBJprxSswGKaLkQHntMtIZ5LMjxpn0UuiuWdFVo6pZ0eKYQ2Esci2nebJ4ygFLIz6jmvPzFLDdFKwXGfl03lundu2GkC5TfM1i4Q7OVLW9ZzzB4Bsa7kRp8p6RLMr9EOcAGzZ9QeymMQQLjUp5Lz8rYrZAHufbjKzA5Via8alFspSmR0Q7CDkOxBP6BW6kQ5we7d3r04qa2yYa4bp8+pUh8ygYPP0yFof1svUKWKiec0NdyqhJ8PxoKKdh0qOFeczuFU0PrXLMpR4ZmrY=
+  file: $GOPATH/bin/hcl-cli
+  skip_cleanup: true
+  on:
+    repo: multani/hcl-cli
