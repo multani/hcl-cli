@@ -11,4 +11,4 @@ deploy:
   file: $GOPATH/bin/hcl-cli
   skip_cleanup: true
   on:
-    repo: multani/hcl-cli
+    tags: true
