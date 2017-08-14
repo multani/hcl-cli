@@ -21,6 +21,7 @@ func main() {
 	}
 
 	rootCmd.AddCommand(commands.FormatCommandFactory())
+	rootCmd.AddCommand(commands.GetCommandFactory())
 	rootCmd.AddCommand(commands.SetCommandFactory())
 
 	if err := rootCmd.Execute(); err != nil {
